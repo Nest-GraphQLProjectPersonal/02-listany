@@ -1,8 +1,11 @@
+import { join } from 'path';
 import { Module } from '@nestjs/common';
 
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
+import { ItemsModule } from './items/items.module';
 
 @Module({
   imports: [
@@ -13,9 +16,17 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       username: process.env.DB_USER || 'aavel',
       password: process.env.DB_PASSWORD || 'tu_contraseña_correcta',
       database: process.env.DB_NAME || 'mydatabase',
-    })
+    }),
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      playground: false,
+      plugins: [
+        ApolloServerPluginLandingPageLocalDefault],
+    }),
+    ItemsModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
-export class AppModule {}
+export class AppModule { }
