@@ -3,12 +3,16 @@
 # ------------------------------------------------------
 
 type Item {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  id: ID!
+  name: String!
+  quantity: Float!
+
+  """QuantityUnits"""
+  quantityUnits: String!
 }
 
 type Query {
-  items: [Item!]!
+  itemsmas: [Item!]!
   item(id: Int!): Item!
 }
 

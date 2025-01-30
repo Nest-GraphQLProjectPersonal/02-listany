@@ -13,7 +13,7 @@ export class ItemsResolver {
     return this.itemsService.create(createItemInput);
   }
 
-  @Query(() => [Item], { name: 'items' })
+  @Query(() => [Item], { name: 'itemsmas' })
   findAll() {
     return this.itemsService.findAll();
   }
