@@ -3,17 +3,15 @@
 # ------------------------------------------------------
 
 type Item {
-  id: ID!
+  id: String!
   name: String!
   quantity: Float!
-
-  """QuantityUnits"""
-  quantityUnits: String!
+  quantityUnits: String
 }
 
 type Query {
-  itemsmas: [Item!]!
-  item(id: Int!): Item!
+  items: [Item!]!
+  item(id: ID!): Item!
 }
 
 type Mutation {
@@ -23,12 +21,14 @@ type Mutation {
 }
 
 input CreateItemInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  name: String!
+  quantity: Float!
+  quantityUnits: String
 }
 
 input UpdateItemInput {
-  """Example field (placeholder)"""
-  exampleField: Int
+  name: String
+  quantity: Float
+  quantityUnits: String
   id: Int!
 }

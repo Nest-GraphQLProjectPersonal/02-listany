@@ -6,12 +6,12 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 export class Item {
 
   @Field(() => ID)
-  id: 'uuid';
+  @Field(() => String)
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
   
   
   @Field(() => String)
-  @PrimaryGeneratedColumn('uuid')
-  
   @Column()
   name: string;
   
@@ -20,8 +20,8 @@ export class Item {
   quantity: number;
   
   
-  @Column()
-  @Field(() => String, { description: 'QuantityUnits' })
+  @Column({nullable: true})
+  @Field(() => String, {nullable: true})
   quantityUnits: string;
 
 

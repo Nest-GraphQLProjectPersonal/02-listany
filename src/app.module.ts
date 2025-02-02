@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
 import { ItemsModule } from './items/items.module';
+import { Item } from './items/entities/item.entity';
 
 @Module({
   imports: [
@@ -16,6 +17,9 @@ import { ItemsModule } from './items/items.module';
       username: process.env.DB_USER || 'aavel',
       password: process.env.DB_PASSWORD || 'tu_contraseña_correcta',
       database: process.env.DB_NAME || 'mydatabase',
+      synchronize: true,
+      autoLoadEntities: true,
+      entities:[Item]
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
