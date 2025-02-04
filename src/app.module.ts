@@ -7,16 +7,20 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
 import { ItemsModule } from './items/items.module';
 import { Item } from './items/entities/item.entity';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: process.env.DB_HOST || 'localhost',
-      port: Number(process.env.DB_PORT) || 5432,
-      username: process.env.DB_USER || 'aavel',
-      password: process.env.DB_PASSWORD || 'tu_contraseña_correcta',
-      database: process.env.DB_NAME || 'mydatabase',
+      host: process.env.DB_HOST ,
+      port: Number(process.env.DB_PORT),
+      username: process.env.DB_USER ,
+      password: process.env.DB_PASSWORD ,
+      database: process.env.DB_NAME ,
       synchronize: true,
       autoLoadEntities: true,
       entities:[Item]
@@ -29,6 +33,8 @@ import { Item } from './items/entities/item.entity';
         ApolloServerPluginLandingPageLocalDefault],
     }),
     ItemsModule,
+    UsersModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
