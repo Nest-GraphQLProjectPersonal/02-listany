@@ -35,7 +35,7 @@ export class AuthService {
         const { email, password } = loginInput;
         const user = await this.usersService.findOneByEmail( email );
 
-        if( !bcrypt.compareSync( password, user.password) ){
+        if( !bcrypt.compareSync( password, user.password) ){ //compara la contraseña que se envia con la que esta en la BD  
             throw new BadRequestException('Email / Password do not match');
         }
         

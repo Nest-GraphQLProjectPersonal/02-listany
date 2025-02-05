@@ -13,19 +13,19 @@ export class JwtStrategy extends PassportStrategy( Strategy ){
     constructor(
         private readonly authService: AuthService,
 
-        ConfigService: ConfigService
+        ConfigService: ConfigService //se agrega para poder obtener el JWT_SECRET 
     ) {
         super({
-            secretOrKey: ConfigService.get('JWT_SECRET'),
-            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
+            secretOrKey: ConfigService.get('JWT_SECRET'),//se obtiene el JWT_SECRET de las variables de entorno
+            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()//se obtiene el token del header
         })
     }
 
-    async validate( payload: JwtPayload ): Promise<User> {
+    async validate( payload: JwtPayload ): Promise<User> { // se valida el token y se obtiene el usuario 
         
-        const { id } = payload;
+        const { id } = payload; //se obtiene el id del payload
 
-        const user = await this.authService.validateUser( id );
+        const user = await this.authService.validateUser( id ); //se valida el usuario por el id
 
         return user;
         

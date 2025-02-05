@@ -25,7 +25,7 @@ export class UsersService {
 
       const newUser = this.usersRepository.create({ 
         ...signupInput,
-        password: bcrypt.hashSync( signupInput.password, 10 )
+        password: bcrypt.hashSync( signupInput.password, 10 )//el 10 es el numero de veces que se va a encriptar
        });
 
       return await this.usersRepository.save( newUser ); 
@@ -73,17 +73,17 @@ export class UsersService {
     throw new Error(`block method not implement`);
   }
 
-  private handleDBErrors( error: any ): never{
+  private handleDBErrors( error: any ): never{ // returno never, porque siempre va a lanzar una excepcion
     
     if( error.code === '23505' ){
       throw new BadRequestException(error.detail.replace('Key', ''));
     }
 
     if( error.code == 'error-001' ){
-      throw new BadRequestException(error.detail.replace('Key', ''));
+      throw new BadRequestException(error.detail.replace('Key', '')); //manejo de errores personalizados
     }
 
-    this.logger.error( error );
+    this.logger.error( error ); // log error, para que el administrador(terminal) pueda ver que paso
     
     throw new InternalServerErrorException('Please check server logs');
   }
