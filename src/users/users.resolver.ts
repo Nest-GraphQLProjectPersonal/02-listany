@@ -1,34 +1,50 @@
+import { ParseUUIDPipe, UseGuards } from '@nestjs/common';
 import { Resolver, Query, Mutation, Args, Int, ID } from '@nestjs/graphql';
+
 import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
-import { CreateUserInput } from './dto/create-user.input';
+
+import { validRolesArgs } from './dto/args/roles.args';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import { ValidRoles } from '../auth/enums/valid-roles.enum';
 import { UpdateUserInput } from './dto/update-user.input';
 
 @Resolver(() => User)
+@UseGuards(JwtAuthGuard)
 export class UsersResolver {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
-  @Query(() => [ User ], { name: 'users' })
-  findAll(): Promise<User[]> {
-    return this.usersService.findAll();
+  @Query(() => [User], { name: 'usersFindAll' })
+  findAll(
+    @CurrentUser([ValidRoles.admin]) user: User,
+    @Args() ValidRoles: validRolesArgs
+  ): Promise<User[]> {
+    return this.usersService.findAll(ValidRoles.roles);
   }
 
-  @Query(() => User, { name: 'user' })
-  findOne(@Args('id', { type: () => ID }) id: string
+  @Query(() => User, { name: 'userById' })
+  findOne(
+    @CurrentUser([ValidRoles.admin]) user: User,
+    @Args('id', { type: () => ID }, ParseUUIDPipe) id: string
   ): Promise<User> {
-    //todo:
-    throw new Error('No implementado');
-    // return this.usersService.findOne(id);
+    
+    return this.usersService.findOneById(id);
+  }
+  
+  @Mutation(() => User, { name: 'userUpdate' })
+  updateUser(
+    @CurrentUser([ValidRoles.admin]) user: User,
+    @Args('updateUserInput') updateUserInput: UpdateUserInput
+  ): Promise<User> {
+    return this.usersService.update(updateUserInput.id, updateUserInput, user);//el user es el usuario que esta haciendo la peticion
   }
 
-  // @Mutation(() => User)
-  // updateUser(@Args('updateUserInput') updateUserInput: UpdateUserInput) {
-  //   return this.usersService.update(updateUserInput.id, updateUserInput);
-  // }
-
-  @Mutation(() => User)
-  blockUser(@Args('id', { type: () => ID }) id: string
+  @Mutation(() => User, { name: 'blockUser' })
+  blockUser(
+    @CurrentUser([ValidRoles.admin]) user: User,
+    @Args('id', { type: () => ID }) id: string
   ): Promise<User> {
-    return this.usersService.block( id );
+    return this.usersService.block(id, user);
   }
 }

@@ -10,6 +10,7 @@ import { Item } from './items/entities/item.entity';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -25,13 +26,37 @@ import { ConfigModule } from '@nestjs/config';
       autoLoadEntities: true,
       entities:[Item]
     }),
-    GraphQLModule.forRoot<ApolloDriverConfig>({
+
+    GraphQLModule.forRootAsync({
       driver: ApolloDriver,
-      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
-      playground: false,
-      plugins: [
-        ApolloServerPluginLandingPageLocalDefault],
+      imports: [ AuthModule ],
+      inject: [ JwtService ],
+      useFactory: async( jwtService: JwtService ) => ({
+        playground: false,
+        autoSchemaFile: join( process.cwd(), 'src/schema.gql'), 
+        plugins: [
+          ApolloServerPluginLandingPageLocalDefault
+        ],
+        context({ req }) {
+          // const token = req.headers.authorization?.replace('Bearer ','');
+          // if ( !token ) throw Error('Token needed');
+
+          // const payload = jwtService.decode( token );
+          // if ( !payload ) throw Error('Token not valid');
+          
+        }
+      })
     }),
+
+    // GraphQLModule.forRoot<ApolloDriverConfig>({
+    //   driver: ApolloDriver,
+    //   autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+    //   playground: false,
+    //   plugins: [
+    //     ApolloServerPluginLandingPageLocalDefault],
+    // }),
+
+
     ItemsModule,
     UsersModule,
     AuthModule,
