@@ -17,7 +17,7 @@ export class UsersResolver {
 
   @Query(() => [User], { name: 'usersFindAll' })
   findAll(
-    @CurrentUser([ValidRoles.admin]) user: User,
+    @CurrentUser([ValidRoles.user]) user: User,
     @Args() ValidRoles: validRolesArgs
   ): Promise<User[]> {
     return this.usersService.findAll(ValidRoles.roles);
@@ -25,7 +25,7 @@ export class UsersResolver {
 
   @Query(() => User, { name: 'userById' })
   findOne(
-    @CurrentUser([ValidRoles.admin]) user: User,
+    @CurrentUser([ValidRoles.user]) user: User,
     @Args('id', { type: () => ID }, ParseUUIDPipe) id: string
   ): Promise<User> {
     
