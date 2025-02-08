@@ -8,7 +8,7 @@
 2. Copiar el ```env.template``` y renombar a ```.env```
 3. Ejecutar
 ```
-yarn install
+npm install
 ```
 4. Levantar la imagen (Docker desktop)
 ```
@@ -17,10 +17,15 @@ docker-compose up -d
 
 5. Levantar el backend de Nest
 ```
-yarn start:dev
+npm run start:dev
 ```
 
 6. Visiar el sitio
 ```
 localhost:3000/graphql
+```
+
+7. Ejecutar la "mutation" executeSeed, para llenar la base de datos con información
+```
+
 ```

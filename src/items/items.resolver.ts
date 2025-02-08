@@ -40,11 +40,12 @@ export class ItemsResolver {
     return this.itemsService.findOne(id,user);
   }
   
-  @Mutation(() => Item)
+  @Mutation(() => Item, { name:"updateItem"})
   updateItem(
-    @Args('updateItemInput') updateItemInput: UpdateItemInput
+    @Args('updateItemInput') updateItemInput: UpdateItemInput,
+    @CurrentUser() user: User
   ):Promise<Item> {
-    return  this.itemsService.update(updateItemInput.id, updateItemInput);
+    return  this.itemsService.update(updateItemInput.id, updateItemInput,user);
   }
   
   @Mutation(() => Item)
