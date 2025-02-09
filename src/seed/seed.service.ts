@@ -34,8 +34,8 @@ export class SeedService {
 
 
     async executeSeed() {
-        
-        if ( this.isProd ) {
+
+        if (this.isProd) {
             throw new UnauthorizedException('We cannot run SEED on Prod');
         }
 
@@ -46,9 +46,7 @@ export class SeedService {
         const user = await this.loadUsers();
 
         //Crear items
-       await this.loadItems( user );
-
-
+        await this.loadItems(user);
 
         return true;
     }
@@ -62,7 +60,7 @@ export class SeedService {
             .execute();
 
         // borrar users
-            await this.usersRepository.createQueryBuilder()
+        await this.usersRepository.createQueryBuilder()
             .delete()
             .where({})
             .execute();
@@ -73,8 +71,8 @@ export class SeedService {
 
         const users = [];
 
-        for (const user of SEED_USERS ) {
-            users.push( await this.usersService.create( user ) )
+        for (const user of SEED_USERS) {
+            users.push(await this.usersService.create(user))
         }
 
         return users[0];
@@ -82,15 +80,15 @@ export class SeedService {
     }
 
 
-    async loadItems( user: User ): Promise<void> {
+    async loadItems(user: User): Promise<void> {
 
         const itemsPromises = [];
 
-        for (const item of SEED_ITEMS ) {
-            itemsPromises.push( this.itemsService.create( item, user ) );
+        for (const item of SEED_ITEMS) {
+            itemsPromises.push(this.itemsService.create(item, user));
         }
 
-        await Promise.all( itemsPromises );
+        await Promise.all(itemsPromises);
 
     }
 

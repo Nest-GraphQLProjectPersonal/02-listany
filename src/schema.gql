@@ -29,8 +29,8 @@ type Query {
   revalidate: AuthResponse!
   usersFindAll(roles: [ValidRoles!] = []): [User!]!
   userById(id: ID!): User!
-  items: [Item!]!
-  item(id: ID!): Item!
+  itemsAll(search: String, offset: Int = 0, limit: Int = 10): [Item!]!
+  itemID(id: ID!): Item!
 }
 
 enum ValidRoles {

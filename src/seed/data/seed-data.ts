@@ -20,6 +20,20 @@ export const SEED_USERS = [
         roles: ['user'],
         isActive: false
     },
+    {
+        fullName: 'Jose Monsalve',
+        email: 'jose@google.com',
+        password: '123456Abc',
+        roles: ['user'],
+        isActive: false
+    },
+    {
+        fullName: 'Arles Pinto',
+        email: 'arles@google.com',
+        password: '123456Abc',
+        roles: ['user'],
+        isActive: false
+    },
 ]
 
 export const SEED_ITEMS = [

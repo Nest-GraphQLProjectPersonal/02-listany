@@ -1,10 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateItemInput, UpdateItemInput } from './dto/inputs';
-import { Item } from './entities/item.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
+
+import { Item } from './entities/item.entity';
 import { User } from 'src/users/entities/user.entity';
 
+import { PaginationArgs, SearchArgs } from 'src/common/dto/args';
 
 
 @Injectable()
@@ -23,16 +25,33 @@ export class ItemsService {
 
   }
 
-  async findAll(user: User,): Promise<Item[]> {
-    // TODO:Pagination
-    return await this.itemsRepository.find({
-      where: {
-        user: {// Es el nombre de la relación entre la entidad Item y la entidad User
-          //Es el campo de la entidad User que se utiliza para filtrar. 
-          id: user.id //Es el valor del id del usuario que se pasa como parámetro al método. Esto asegura que solo se devuelvan los items que pertenecen a ese usuario específico.
-        }
-      }
-    })
+  async findAll(user: User, paginationArgs: PaginationArgs, searchArgs: SearchArgs): Promise<Item[]> {
+
+    const { limit, offset } = paginationArgs;
+    const { search } = searchArgs
+
+    const queryBuilder = this.itemsRepository.createQueryBuilder()
+      .take(limit)
+      .skip(offset)
+      .where(`"userId"  = :userId`, { userId: user.id })
+
+    if( search ){
+      queryBuilder.andWhere('Lower(name) like :name', { name: `%${ search.toLowerCase()}%` })
+    }
+
+    return queryBuilder.getMany()
+    
+    // return await this.itemsRepository.find({
+    //   take: limit, //toma x cantidad de registro
+    //   skip: offset, //inicia desde x valor (definido en paginationArgs)
+    //   where: {
+    //     user: {// Es el nombre de la relación entre la entidad Item y la entidad User
+    //       //Es el campo de la entidad User que se utiliza para filtrar. 
+    //       id: user.id //Es el valor del id del usuario que se pasa como parámetro al método. Esto asegura que solo se devuelvan los items que pertenecen a ese usuario específico.
+    //     },
+    //     name: Like(`%${search}%`)
+    //   }
+    // })
   }
 
   findOne(id: string, user: User): Promise<Item> {

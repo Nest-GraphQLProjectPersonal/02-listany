@@ -7,9 +7,10 @@ import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 
 import { SignupInput } from '../auth/dto/inputs/signup.input';
-import { Repository } from 'typeorm';
+import {  Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ValidRoles } from 'src/auth/enums/valid-roles.enum';
+
 
 @Injectable()
 export class UsersService {
@@ -39,12 +40,11 @@ export class UsersService {
   async findAll(roles: ValidRoles[]): Promise<User[]> {
 
     if (roles.length === 0) return this.usersRepository.find()
-
-    return this.usersRepository.createQueryBuilder()
+      
+    return  this.usersRepository.createQueryBuilder()
       .where('ARRAY[roles] && ARRAY[:...roles]', { roles })
       .setParameter('roles', roles)
-      .getMany();
-
+      .getMany()
   }
 
 

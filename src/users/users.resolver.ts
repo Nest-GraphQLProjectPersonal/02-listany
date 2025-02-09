@@ -10,6 +10,7 @@ import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { ValidRoles } from '../auth/enums/valid-roles.enum';
 import { UpdateUserInput } from './dto/update-user.input';
 import { ItemsService } from 'src/items/items.service';
+import { SearchArgs } from 'src/common/dto/args';
 
 @Resolver(() => User)
 @UseGuards(JwtAuthGuard)
@@ -21,9 +22,10 @@ export class UsersResolver {
 
   @Query(() => [User], { name: 'usersFindAll' })
   findAll(
-    @CurrentUser([ValidRoles.user, ValidRoles.admin]) user: User,
-    @Args() ValidRoles: validRolesArgs
+    @CurrentUser([ValidRoles.superUser, ValidRoles.admin]) user: User,
+    @Args() ValidRoles: validRolesArgs,
   ): Promise<User[]> {
+
     return this.usersService.findAll(ValidRoles.roles);
   }
 
